@@ -1,3 +1,33 @@
+flight(6711,815,1005,bos,ord).
+flight(211,700,830,lga,ord).
+flight(203,730,1335,lga,lax).
+flight(92221,800,920,ewr,ord).
+flight(2134,930,1345,ord,sfo).
+flight(954,1655,1800,phx,dfw).
+flight(1176,1430,1545,sfo,lax).
+flight(205,1630,2211,lax,lga).
+
+/*
+Where does the flight from PHX go?
+
+Is there a flight to PHX?
+
+What time is does the flight from BOS land?
+
+Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
+
+What time do the flights to ORD arrive?
+
+What are all the ways to get from LGA to LAX?
+*/
+
+where(X) :-
+    flight(W, Y, Z, X, A),
+    write(X),
+    write(" goes to "),
+    write(A).
+
+
 %also recurion
 %base case
 f(0,1).
