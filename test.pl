@@ -21,12 +21,49 @@ What time do the flights to ORD arrive?
 What are all the ways to get from LGA to LAX?
 */
 
-where(X) :-
-    flight(W, Y, Z, X, A),
+where(X) :-   
+    flight(_, _, _, X, A),
     write(X),
     write(" goes to "),
-    write(A).
+    write(A),nl.
 
+where(X) :-   
+    \+(flight(_, _, _, X, _)),
+    write(X),
+    write(" goes to NOWHERE!!!"),nl.
+
+
+to(X) :-   
+    flight(_, _, _, Y, X),
+    write(Y),
+    write(" goes to "),
+    write(X),nl.
+
+to(X) :-   
+    \+(flight(_, _, _, _, X)),
+    write("Nobody goes to "),
+    write(X),nl.
+
+
+
+which_first(X, Y, Z, W) :- 
+    flight(_, A, _, X, Y),
+    flight(_, B, _, Z, W),
+    (   A > B -> true; false).
+
+
+%arrival time
+flight(_, _, A, _, ord)
+
+
+/*
+where(X) :-
+    (   flight(_, _, _, X, A) ->  
+    write(X),
+    write(" goes to "),
+    write(A);
+    write("hhh")).
+*/
 
 %also recurion
 %base case
