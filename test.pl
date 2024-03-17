@@ -7,121 +7,60 @@ flight(954,1655,1800,phx,dfw).
 flight(1176,1430,1545,sfo,lax).
 flight(205,1630,2211,lax,lga).
 
-/*
-Where does the flight from PHX go?
-
-Is there a flight to PHX?
-
-What time is does the flight from BOS land?
-
-Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
-
-What time do the flights to ORD arrive?
-
-What are all the ways to get from LGA to LAX?
-*/
-
+%Where does the flight from PHX go?
 where(X) :-   
     flight(_, _, _, X, A),
     write(X),
     write(" goes to "),
     write(A),nl.
-
+%if none
 where(X) :-   
     \+(flight(_, _, _, X, _)),
     write(X),
     write(" goes to NOWHERE!!!"),nl.
 
-
+%Is there a flight to PHX?
 to(X) :-   
     flight(_, _, _, Y, X),
     write(Y),
     write(" goes to "),
     write(X),nl.
 
+%What time is does the flight from BOS land?
 to(X) :-   
     \+(flight(_, _, _, _, X)),
     write("Nobody goes to "),
     write(X),nl.
 
-
-
+%Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
 which_first(X, Y, Z, W) :- 
     flight(_, A, _, X, Y),
     flight(_, B, _, Z, W),
     (   A > B -> true; false).
 
+%What time do the flights to ORD arrive?
+%flight(_, _, A, _, ord)
 
-%arrival time
-flight(_, _, A, _, ord)
-
-
-/*
-where(X) :-
-    (   flight(_, _, _, X, A) ->  
-    write(X),
-    write(" goes to "),
-    write(A);
-    write("hhh")).
-*/
-
-%also recurion
-%base case
-f(0,1).
-%what to do otherwise
-f(A,B) :- 
-    %if A is greater than zero 
-      A > 0, 
-    %Ax which is just a new varible is A -1 	
-      Ax is A - 1,
-    %get the factorial of that 
-      f(Ax,Bx), 
-    write('A = '), write(A),nl,
-    write('Ax = '), write(Ax),nl,
-    %B will be ???
-    write('Bx = '), write(Bx),nl,
-      B is A * Bx.
+%What are all the ways to get from LGA to LAX?
+% so super easy to check if there is a dirrect path 
+path(X, Z) :- write('part 1 '),nl, flight(_, _, _, X, Z).
+%if no direct path need to check from start flight or end flight... i would say from end flight 
+%so we get the 
+path(X, Z) :- %write('part 2 start= '), write(X),nl, write(' ----- '), 
+    %so look for wher it starts
+    flight(_, _, _, Y, Z),
+    %write('part 2 new start= '), write(Y), write(' ----- '),nl,
+	%then try and look for where those start 
+    path(P, Y),
+   	write('part 2 newest start= '), write(P), write(' ------ '),nl,
+	write('part 2 newest end= '), write(Y), write(' ------ '),nl.
+%so you start at the end, get all incoming flights check incoming flights of all of them...
+%keep going untill when... how do you stop loops... when you go back to yourself 
 
 
+%so if I did this is a language i know... might not be worth it at the moment 
 
-%recursion
-parent(pam,bob).
-parent(tom,bob).
-parent(tom,liz).
-parent(bob,ann).
-parent(bob,pat).
-parent(pat,jim).
-parent(bob,peter).
-parent(peter,jim).
-
-predecessor(X, Z) :- write('part 1 '),nl, parent(X, Z).
-%so get kids, then ask for kids kids?? I think that is what is happening, is this like searching a tree 
-predecessor(X, Z) :- write('part 2 X= '), write(X),nl, write(' ----- '),parent(X, Y),
-    write('part 2 Y= '), write(Y), write(' ----- '),nl,
-    predecessor(Y, Z),
-   	write('part 2 Z= '), write(Z), write(' ------ '),nl.
-
-
-
-
-
-/*
-name_age(alice, 20).
-name_age(bob, 30).
-name_age(eve, 40).
-name_age(mallory, 30).
-
-is_older(X, Y) :- 
-    name_age(X,Z),
-    name_age(Y,W),
-    (   Z > W -> true; false).
-
-
-personalized_greeting :- 
-    write('Enter your name: '),
-    nl,
-    read(X),
-    write('Hello '),
-    write(X).
-    
- */
+%i mean in sql you could just keep joing tables on arrival and departure... until nothing changes??
+% and then what look at all the very end points not sure how that would be done exactly 
+%similar for I what I did with david but not exactly the same.... should probably let 
+% it be for the moment 
