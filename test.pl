@@ -13,6 +13,53 @@ flight(205,1630,2211,lax,lga).
 %----------------------------------------------------------
 %RULES
 
+
+%https://stackoverflow.com/questions/3901250/traversing-a-graph-with-possible-loops-and-returning-the-path-in-prolog
+%so this gets me a path no problem
+
+path(Start, End, Path) :-
+    %gives us an empty acculmator
+    path(Start, End, [], Path).
+
+path(Now, End, Acc, Path) :-
+    %looks for the next airport 
+    flight(_,_,_,Now, Mid),
+    %did we reach the end??
+    Mid == End, %!,
+    %hmmmm....
+    append(Acc, [Now, End], Path).
+
+path(Now, End, Acc, Path) :-
+    %looks for the next airport
+    flight(_,_,_,Now, Mid),
+    %this should be true 
+    \+ member(Mid, Acc),
+    append(Acc, [Now], X),
+    %write([Now|Acc]),nl,
+    write([X]),nl,
+    path(Mid, End, X, Path).
+
+
+%findall(Path, path(Start,End,Path), Paths).
+
+%attempting the last questiion so this from teh book and kind works 
+/*
+go(X,X, T). 
+go(X,Y,T):- flight(_,_,_,X,Z), legal(Z,T), go(Z,Y, [Z|T]), write(T).
+
+legal(X, []).
+legal(X, [H|T]):- \+X = H, legal(X,T).
+
+
+go(X,X, T). 
+go(X,Y,T):- flight(_,_,_,X,Z), legal(Z,T), go(Z,Y, [Z|T]), write(T).
+
+legal(X, []).
+legal(X, [H|T]):- \+X = H, legal(X,T).
+*/
+
+%----------------------------------------------------------
+
 %Where does the flight from PHX go?
 where(X) :-   
     flight(_, _, _, X, A),
