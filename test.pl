@@ -9,36 +9,83 @@ flight(2134,930,1345,ord,sfo).
 flight(954,1655,1800,phx,dfw).
 flight(1176,1430,1545,sfo,lax).
 flight(205,1630,2211,lax,lga).
+flight(2013,730,1335,lga,phx).
+flight(2018,730,1335,phx, lga).
 
 %----------------------------------------------------------
 %RULES
+/*
+%Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
+which_first(X, Y, Z, W) :- 
+    flight(_, A, _, X, Y),
+    flight(_, _, B, Z, W),
+    (   A > B -> 
+    write("flight "),
+    write(X), write(" to "), write(Y),
+    write(" departs after "),    
+    write(Z), write(" to "), write(W), write(" lands"); 
+    write("flight "),
+    write(X), write(" to "), write(Y),
+    write(" departs before "),    
+    write(Z), write(" to "), write(W), write(" lands")).
+*/
 
+%Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
+%this assumes all flights happen on the same day, which is fine 
+connection(X, Y, Z, W) :- 
+    flight(_, A, _, X, Y),
+    flight(_, _, B, Z, W),
+    (A > B -> true; false).
+
+
+%----------------------------------------------------------
 
 %https://stackoverflow.com/questions/3901250/traversing-a-graph-with-possible-loops-and-returning-the-path-in-prolog
 %so this gets me a path no problem
 
+%so this just makes it easier to run the program 
 path(Start, End, Path) :-
     %gives us an empty acculmator
     path(Start, End, [], Path).
 
+
+%this sees if our next stop is the end 
 path(Now, End, Acc, Path) :-
     %looks for the next airport 
     flight(_,_,_,Now, Mid),
     %did we reach the end??
-    Mid == End, %!,
-    %hmmmm....
+    Mid == End,
+    %if so just add whever we are and the end to path, and return path
     append(Acc, [Now, End], Path).
+	%maybe here I iterate through path??
+	%so I would seen path to a function that would go through three items at a time and 
+	%make sure they all made the connections?? that sounds right 
+%https://www.swi-prolog.org/pldoc/man?predicate=length/2
+%https://stackoverflow.com/questions/69989726/slicing-the-list-in-prolog-between-two-indexes
+
+
+
 
 path(Now, End, Acc, Path) :-
     %looks for the next airport
     flight(_,_,_,Now, Mid),
-    %this should be true 
+    %Checks that the next aorport is not already in our path 
     \+ member(Mid, Acc),
+   %checking to make sure you can make the connection, without waiting for the next day 
+%    connection(Mid, End, Now, Mid), that does not work 
+    %if it's not it gets added to path, this is enough to stop infinite loops :),
     append(Acc, [Now], X),
-    %write([Now|Acc]),nl,
+%    write([Now|Acc]),nl,
     write([X]),nl,
+    %recursively calls itself from our new starting point 
     path(Mid, End, X, Path).
 
+
+%check_path(start, path):-
+ %so it gets path, it makes sure there are at least three more items till the end 
+%it gets those three items, it sends them in the right order to connections
+%then calls itself recursively to check on the next three... how does it stop we need
+%an if else somewhere
 
 %findall(Path, path(Start,End,Path), Paths).
 
@@ -95,21 +142,7 @@ time(X) :-
     write(Y),nl.
 
 
-%----------------------------------------------------------
 
-%Does the flight from ORD to SFO depart after the flight from EWR to ORD lands?
-which_first(X, Y, Z, W) :- 
-    flight(_, A, _, X, Y),
-    flight(_, _, B, Z, W),
-    (   A > B -> 
-    write("flight "),
-    write(X), write(" to "), write(Y),
-    write(" departs after "),    
-    write(Z), write(" to "), write(W), write(" lands"); 
-    write("flight "),
-    write(X), write(" to "), write(Y),
-    write(" departs before "),    
-    write(Z), write(" to "), write(W), write(" lands")).
 
 %----------------------------------------------------------
 
