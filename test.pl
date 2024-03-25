@@ -3,14 +3,14 @@
 
 flight(6711,815,1005,bos,ord).
 flight(211,700,830,lga,ord).
-flight(203,730,1335,lga,lax).
+%flight(203,730,1335,lga,lax).
 flight(92221,800,920,ewr,ord).
 flight(2134,930,1345,ord,sfo).
 flight(954,1655,1800,phx,dfw).
 flight(1176,1430,1545,sfo,lax).
-flight(205,1630,2211,lax,lga).
-flight(2013,730,1335,lga,phx).
-flight(2018,730,1335,phx, lga).
+%flight(205,1630,2211,lax,lga).
+%flight(2013,730,1335,lga,phx).
+%flight(2018,730,1335,phx, lga).
 
 %----------------------------------------------------------
 %RULES
@@ -43,12 +43,9 @@ connection(X, Y, Z, W) :-
 %https://stackoverflow.com/questions/3901250/traversing-a-graph-with-possible-loops-and-returning-the-path-in-prolog
 %so this gets me a path no problem
 
-%so this just makes it easier to run the program 
-path(Start, End, Path) :-
-    %gives us an empty acculmator
-    path(Start, End, [], Path).
 
 
+/*
 %this sees if our next stop is the end 
 path(Now, End, Acc, Path) :-
     %looks for the next airport 
@@ -62,10 +59,74 @@ path(Now, End, Acc, Path) :-
 	%make sure they all made the connections?? that sounds right 
 %https://www.swi-prolog.org/pldoc/man?predicate=length/2
 %https://stackoverflow.com/questions/69989726/slicing-the-list-in-prolog-between-two-indexes
+*/
 
+slice(L, From, To, R):-
+  length(LFrom, From),
+  %write(LFrom),nl,  
+  length([_|LTo], To),
+  append(LTo, _, L),
+  %write('----------'),nl,
+  %write(L),nl,
+  %write(LTo),nl,
+  %write(LFrom),nl,  
+  %write('----------'),nl,
+  append(LFrom, R, LTo).
 
+first([E,_,_|_], E). %:-
+    %write('in first'),nl,
+    %write(E).
+second([_,E,_|_], E):-
+   write('in 2'),nl,
+    write(E).
+third([_,_,E|_], E) :-
+	write('in 3'),nl,    
+	write(E).
 
+check_path(Start, Path):-
+    %write(Start),nl,
+	%write(Path),nl,
+    length(Path,Length),nl,
+    %write(Length),nl,
+    (Length - Start > 2 ->
+    End is Start + 4,
+    slice(Path, Start, End, R),
+    write("slice"),nl,
+    write(R),nl,
+    write("1st"),nl,
+    first(R, St),
+    write(St),nl,
+    second(R, Mid),nl,
+    write(Mid),nl,
+    third(R, Last),nl,
+    write(Last),nl,
+    connection(Mid, Last, St, Mid),
+    Newstart is Start + 1,
+    check_path(Newstart, Path)
+    ;
+    %write(F),nl;
 
+    true).
+
+%so this just makes it easier to run the program 
+path(Start, End, Path) :-
+    %gives us an empty acculmator
+    path(Start, End, [], Path).
+
+path(Now, End, Acc, Path) :-
+    %looks for the next airport 
+    flight(_,_,_,Now, Mid),
+    %did we reach the end??
+    Mid == End,
+    %if so just add whever we are and the end to path, and return path
+    append(Acc, [Now, End], Path),
+    check_path(0, Path).
+	%maybe here I iterate through path??
+	%so I would seen path to a function that would go through three items at a time and 
+	%make sure they all made the connections?? that sounds right 
+%https://www.swi-prolog.org/pldoc/man?predicate=length/2
+%https://stackoverflow.com/questions/69989726/slicing-the-list-in-prolog-between-two-indexes
+	
 path(Now, End, Acc, Path) :-
     %looks for the next airport
     flight(_,_,_,Now, Mid),
@@ -76,13 +137,14 @@ path(Now, End, Acc, Path) :-
     %if it's not it gets added to path, this is enough to stop infinite loops :),
     append(Acc, [Now], X),
 %    write([Now|Acc]),nl,
-    write([X]),nl,
+    %write([X]),nl,
     %recursively calls itself from our new starting point 
     path(Mid, End, X, Path).
 
 
-%check_path(start, path):-
- %so it gets path, it makes sure there are at least three more items till the end 
+
+
+%so it gets path, it makes sure there are at least three more items till the end 
 %it gets those three items, it sends them in the right order to connections
 %then calls itself recursively to check on the next three... how does it stop we need
 %an if else somewhere
