@@ -3,14 +3,14 @@
 
 flight(6711,815,1005,bos,ord).
 flight(211,700,830,lga,ord).
-%flight(203,730,1335,lga,lax).
+flight(203,730,1335,lga,lax).
 flight(92221,800,920,ewr,ord).
 flight(2134,930,1345,ord,sfo).
 flight(954,1655,1800,phx,dfw).
 flight(1176,1430,1545,sfo,lax).
-%flight(205,1630,2211,lax,lga).
-%flight(2013,730,1335,lga,phx).
-%flight(2018,730,1335,phx, lga).
+flight(205,1630,2211,lax,lga).
+flight(2013,730,1335,lga,phx).
+flight(2018,730,1335,phx, lga).
 flight(111,645,745,lga,bos).
 flight(222,750,845,bos,ewr).
 
