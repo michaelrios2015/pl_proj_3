@@ -8,7 +8,7 @@ flight(92221,800,920,ewr,ord).
 flight(2134,930,1345,ord,sfo).
 flight(954,1655,1800,phx,dfw).
 flight(1176,1430,1545,sfo,lax).
-flight(205,1630,2211,lax,lga).
+flight(205,1630,2210,lax,lga).
 
 %I added these two, to make sure I would not get an infinite loop
 %in the path function
